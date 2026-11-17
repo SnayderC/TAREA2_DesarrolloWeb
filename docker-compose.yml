@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:16
+    container_name: catalogo_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: catalogo
+      POSTGRES_PASSWORD: catalogo_dev
+      POSTGRES_DB: catalogo
+    ports:
+      # Puerto del host 5433 para no chocar con otro PostgreSQL local en 5432
+      - "5433:5432"
+    volumes:
+      # Volumen con nombre: los datos sobreviven a reinicios del contenedor
+      - catalogo_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U catalogo -d catalogo"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  catalogo_data:
