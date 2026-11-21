@@ -18,6 +18,14 @@ class ApiError extends Error {
     return new ApiError(422, 'VALIDACION', 'Datos inválidos', detalles);
   }
 
+  static noAutenticado(mensaje = 'Se requiere autenticación', codigo = 'NO_AUTENTICADO') {
+    return new ApiError(401, codigo, mensaje);
+  }
+
+  static prohibido(mensaje = 'No tienes permiso para realizar esta acción') {
+    return new ApiError(403, 'PROHIBIDO', mensaje);
+  }
+
   static noEncontrado(mensaje = 'Recurso no encontrado') {
     return new ApiError(404, 'NO_ENCONTRADO', mensaje);
   }
