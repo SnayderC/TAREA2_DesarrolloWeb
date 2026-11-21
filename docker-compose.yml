@@ -14,7 +14,10 @@ services:
       # Volumen con nombre: los datos sobreviven a reinicios del contenedor
       - catalogo_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U catalogo -d catalogo"]
+      # -h 127.0.0.1 (TCP): en el primer arranque la imagen levanta un servidor
+      # temporal solo por socket Unix para crear la BD y luego se reinicia.
+      # Por TCP, "healthy" solo llega cuando el servidor definitivo está listo.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U catalogo -d catalogo"]
       interval: 5s
       timeout: 3s
       retries: 10
