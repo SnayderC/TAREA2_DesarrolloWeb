@@ -4,3 +4,4 @@ node_modules/
 postman/*.postman_environment.json
 !postman/*.example.json
 CLAUDE.md
+entorno-run.json
