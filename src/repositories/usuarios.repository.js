@@ -33,4 +33,18 @@ async function crearUsuario({ nombre, correo, passwordHash }) {
   return rows[0];
 }
 
-module.exports = { buscarPorCorreo, buscarCredencialesPorCorreo, crearUsuario };
+// Solo la usa scripts/crear-admin.js (no hay endpoint que la llame).
+// ON CONFLICT DO NOTHING la hace idempotente: si el correo ya existe no inserta
+// nada y devuelve null, sin depender de una verificación previa.
+async function crearAdmin({ nombre, correo, passwordHash }) {
+  const { rows } = await pool.query(
+    `INSERT INTO usuarios (nombre, correo, password_hash, rol)
+     VALUES ($1, $2, $3, 'admin')
+     ON CONFLICT (correo) DO NOTHING
+     RETURNING ${COLUMNAS_PUBLICAS}`,
+    [nombre, correo, passwordHash]
+  );
+  return rows[0] || null;
+}
+
+module.exports = { buscarPorCorreo, buscarCredencialesPorCorreo, crearUsuario, crearAdmin };
